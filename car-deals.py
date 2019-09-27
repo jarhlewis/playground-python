@@ -1,21 +1,22 @@
-from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
+from selenium import webdriver
 
-#Open https connection and store the read
-corotoVehiclesURL = "https://www.corotos.com.do/c/veh%C3%ADculos"
-corotoVehiclesRequest = urlopen(corotoVehiclesURL)
-cvehiclesHTML = corotoVehiclesRequest.read()
-corotoVehiclesRequest.close()
+#Get and run the script for that url
+driver = webdriver.Chrome("C:/Users/HP/Anaconda3/pkgs/python-chromedriver-binary-77.0.3865.40.0-py37_0/Lib/site-packages/chromedriver_binary/chromedriver.exe")
+driver.get("https://www.corotos.com.do/c/veh%C3%ADculos")
+res = driver.execute_script("return document.documentElement.outerHTML")
 
-#Parse html
-cvehicleSoup = soup(cvehiclesHTML, "html.parser")
+driver.quit()
+
+#Parse html from rendered view "res"
+cvehicleSoup = soup(res, "html.parser")
 
 #Grab each product
-fullDiv = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
+fullDiv = cvehicleSoup.find("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
 len(fullDiv)
 
 #Item price and name sub-div has class="_32PML"
-priceNameDiv = cvehicleSoup.findAll("div", {"class" : "_32PML"})
+priceNameDiv = cvehicleSoup.find("div", {"class" : "_32PML"})
 len(priceNameDiv)
 
 exit()
