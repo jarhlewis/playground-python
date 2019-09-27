@@ -12,11 +12,11 @@ driver.quit()
 cvehicleSoup = soup(res, "html.parser")
 
 #Grab each product
-fullDiv = cvehicleSoup.find("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
+fullDiv = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
 len(fullDiv)
 
 #Item price and name sub-div has class="_32PML"
-priceNameDiv = cvehicleSoup.find("div", {"class" : "_32PML"})
+priceNameDiv = cvehicleSoup.findAll("div", {"class" : "_32PML"})
 len(priceNameDiv)
 
 exit()
