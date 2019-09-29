@@ -18,41 +18,44 @@ driver.quit()
 cvehicleSoup = soup(res, "html.parser")
 
 #ENTIRE DIV MUST CONTAIN THE LINK
-fullDiv = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
-elements = fullDiv[2].findChildren()
+fullDivsArray = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
 
-# Title is 14 as getText method
-# price is 13 as attribute "data-value"
-# type of publisher store or customer is 10 as getText method
-# Name of publisher is 8 as attribute "alt"
-# link to the ad is 1 as attribute "href"
+# Create a workbook and add a worksheet.
+workbook = xlsxwriter.Workbook("CorotosOfertas.xlsx")
+worksheet = workbook.add_worksheet()
 
-print("Title is: " + str(elements[len(elements)-1]))
-print("Price is: " + str(elements[len(elements)-2]))
-print("Type: " + str(elements[len(elements)-5]))
-print("Seller Name: " + str(elements[len(elements)-7]))
-print("Link: " + str(elements[0]))
+row=1 #rows start at 0 but titles go on first row
 
+worksheet.write(0,0, "Titulo")
+worksheet.write(0,1, "Precio")
+worksheet.write(0,2, "Tipo Vendedor")
+worksheet.write(0,3, "Nombre Vendedor")
+worksheet.write(0,4, "Enlace")
 
-# # Create a workbook and add a worksheet.
-# workbook = xlsxwriter.Workbook("CorotosOfertas.xlsx")
-# worksheet = workbook.add_worksheet()
+# Title is 14 (last) as getText method
+# price is 13 (penultimo) as attribute "data-value"
+# type of publisher store or customer is 10(etc) as getText method
+# Name of publisher is 8(etc) as attribute "alt"
+# link to the ad is 1(etc) as attribute "href"
 
-# #iterate through. findChildren() returns an array of all children elements which is then searched [0] for price and [2] for name of ad. 
+for elements in fullDivsArray:
+    elements = elements.findChildren() #it now becomes an array instead of a tag
+    print("Title is: " + elements[len(elements)-1].getText())
+    worksheet.write(row, 0, elements[len(elements)-1].getText())
+    print("Price is: " + str(elements[len(elements)-2]['data-value']))
+    worksheet.write(row, 1, elements[len(elements)-2]['data-value'])
+    if elements[len(elements)-5].getText() != "":
+        print("Type: " + elements[len(elements)-5].getText())
+        worksheet.write(row, 2, "Tienda")
+    else:
+        print("Type: Independiente")
+        worksheet.write(row, 2, "Independiente")
+    print("Seller Name: " + str(elements[8]['alt']))
+    worksheet.write(row, 3, str(elements[8]['alt']))
+    print("Link: " + str(elements[0]['href']))
+    worksheet.write(row, 4, "corotos.com.do" + str(elements[0]['href']))
+    row+=1
 
-# row=1 #rows start at 0 but titles go on first row
-# col=0
-
-# worksheet.write(0,0, "Titulo")
-# worksheet.write(0,1, "Precio")
-
-# for item in priceNameDiv:
-#     print("inserting: " + item.findChildren()[0].getText() + "...")
-#     # worksheet.write(row, col, item.findChildren()[0].getText())
-#     print("inserting: " + item.findChildren()[2].getText() + "...")
-#     # worksheet.write(row, col+1, item.findChildren()[2].getText())
-#     row+=1
-
-# workbook.close()
+workbook.close()
 
 exit()
