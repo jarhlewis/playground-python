@@ -18,31 +18,41 @@ driver.quit()
 cvehicleSoup = soup(res, "html.parser")
 
 #ENTIRE DIV MUST CONTAIN THE LINK
-# fullDiv = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
-# print(fullDiv)
+fullDiv = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
+elements = fullDiv[2].findChildren()
 
-#Item price and name sub-div has class="_32PML"
-priceNameDiv = cvehicleSoup.findAll("div", {"class" : "_32PML"})
+# Title is 14 as getText method
+# price is 13 as attribute "data-value"
+# type of publisher store or customer is 10 as getText method
+# Name of publisher is 8 as attribute "alt"
+# link to the ad is 1 as attribute "href"
 
-# Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook("CorotosOfertas.xlsx")
-worksheet = workbook.add_worksheet()
+print("Title is: " + str(elements[len(elements)-1]))
+print("Price is: " + str(elements[len(elements)-2]))
+print("Type: " + str(elements[len(elements)-5]))
+print("Seller Name: " + str(elements[len(elements)-7]))
+print("Link: " + str(elements[0]))
 
-#iterate through. findChildren() returns an array of all children elements which is then searched [0] for price and [2] for name of ad. 
 
-row=1 #rows start at 0 but titles go on first row
-col=0
+# # Create a workbook and add a worksheet.
+# workbook = xlsxwriter.Workbook("CorotosOfertas.xlsx")
+# worksheet = workbook.add_worksheet()
 
-worksheet.write(0,0, "Titulo")
-worksheet.write(0,1, "Precio")
+# #iterate through. findChildren() returns an array of all children elements which is then searched [0] for price and [2] for name of ad. 
 
-for item in priceNameDiv:
-    print("inserting: " + item.findChildren()[0].getText() + "...")
-    # worksheet.write(row, col, item.findChildren()[0].getText())
-    print("inserting: " + item.findChildren()[2].getText() + "...")
-    # worksheet.write(row, col+1, item.findChildren()[2].getText())
-    row+=1
+# row=1 #rows start at 0 but titles go on first row
+# col=0
 
-workbook.close()
+# worksheet.write(0,0, "Titulo")
+# worksheet.write(0,1, "Precio")
+
+# for item in priceNameDiv:
+#     print("inserting: " + item.findChildren()[0].getText() + "...")
+#     # worksheet.write(row, col, item.findChildren()[0].getText())
+#     print("inserting: " + item.findChildren()[2].getText() + "...")
+#     # worksheet.write(row, col+1, item.findChildren()[2].getText())
+#     row+=1
+
+# workbook.close()
 
 exit()
