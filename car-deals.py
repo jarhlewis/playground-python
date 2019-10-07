@@ -1,10 +1,19 @@
 from bs4 import BeautifulSoup as soup
 from selenium import webdriver
 import xlsxwriter
-import os
+import sys, os, inspect
+
+if getattr(sys, 'frozen', False) :
+    # running in a bundle
+    chromedriver_path = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe() ))[0]))
+else:
+    chromedriver_path = "C:/Users/HP/Anaconda3/pkgs/python-chromedriver-binary-77.0.3865.40.0-py37_0/Lib/site-packages/chromedriver_binary/chromedriver.exe"
+
+#dynamically get desktop
+excel_file_path = os.path.join(os.environ["HOMEPATH"], "Desktop")
 
 #Create chrome isntance
-driver = webdriver.Chrome("C:/Users/HP/Anaconda3/pkgs/python-chromedriver-binary-77.0.3865.40.0-py37_0/Lib/site-packages/chromedriver_binary/chromedriver.exe")
+driver = webdriver.Chrome(executable_path = chromedriver_path)
 
 #request url
 driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/carros")
@@ -21,7 +30,7 @@ cvehicleSoup = soup(res, "html.parser")
 fullDivsArray = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
 
 # Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook("CorotosOfertas.xlsx")
+workbook = xlsxwriter.Workbook(excel_file_path + "/CorotosOfertas.xlsx")
 worksheet = workbook.add_worksheet()
 
 row=1 #rows start at 0 but titles go on first row
