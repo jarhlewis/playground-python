@@ -18,6 +18,10 @@ driver = webdriver.Chrome(executable_path = chromedriver_path)
 #request url
 driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/carros")
 
+#Load more cars
+load_more = driver.find_element_by_xpath("//button[@data-name='load_more']")
+driver.execute_script("arguments[0].click();", load_more)
+
 #Execute script to retreive dynamically rendered html text into res var
 res = driver.execute_script("return document.documentElement.outerHTML")
 
