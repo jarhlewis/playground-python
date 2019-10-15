@@ -21,7 +21,7 @@ driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/carros"
 #Load 1000 cars
 load_more = driver.find_element_by_xpath("//button[@data-name='load_more']")
 #27 times because 36 + 36*27 is equal 1008 which is what we want
-for i in range(2):
+for i in range(1):
     driver.execute_script("arguments[0].click();", load_more)
 
 #Execute script to retreive dynamically rendered html text into res var
@@ -40,6 +40,24 @@ for elements in fullDivsArray:
     elements = elements.findChildren()
     offer_list.append("https://www.corotos.com.do" + str(elements[0]['href']))
 
+# Create a workbook and add a worksheet.
+workbook = xlsxwriter.Workbook(excel_file_path + "/CorotosOfertas.xlsx")
+worksheet = workbook.add_worksheet()
+
+row=1 #rows start at 0 but titles go on first row
+
+worksheet.write(0,0, "Fecha")
+worksheet.write(0,1, "Ubicación")
+worksheet.write(0,2, "Categoria")
+worksheet.write(0,3, "Marca")
+worksheet.write(0,4, "Modelo")
+worksheet.write(0,5, "Tipo")
+worksheet.write(0,6, "Año")
+worksheet.write(0,7, "Kilometraje")
+worksheet.write(0,8, "Combustible")
+worksheet.write(0,9, "Transmisión")
+worksheet.write(0,10, "Condición")
+
 #driver.get each link item, parse the html for the ad page, create list with infos in
 for link in offer_list:
     driver.get(link)
@@ -50,45 +68,24 @@ for link in offer_list:
     cleanInfos = []
     for n in infos:
         cleanInfos.append(n.text)
-    print("Brand: " + cleanInfos[cleanInfos.index('Marca') + 1] + ". Year: " + cleanInfos[cleanInfos.index('Año') + 1] + ". Condición: " + cleanInfos[cleanInfos.index('Condición') + 1])
+    try:
+        print("Brand: " + cleanInfos[cleanInfos.index('Marca') + 1] + ". Year: " + cleanInfos[cleanInfos.index('Año') + 1] + ". Condición: " + cleanInfos[cleanInfos.index('Condición') + 1])
+        worksheet.write(row, 0, cleanInfos[0])
+        worksheet.write(row, 1, cleanInfos[1])
+        worksheet.write(row, 2, cleanInfos[2])
+        worksheet.write(row, 3, cleanInfos[cleanInfos.index('Marca') + 1])
+        worksheet.write(row, 4, cleanInfos[cleanInfos.index('Modelo') + 1])
+        worksheet.write(row, 5, cleanInfos[cleanInfos.index('Tipo') + 1])
+        worksheet.write(row, 6, cleanInfos[cleanInfos.index('Año') + 1])
+        worksheet.write(row, 7, cleanInfos[cleanInfos.index('Kilometraje') + 1])
+        worksheet.write(row, 8, cleanInfos[cleanInfos.index('Combustible') + 1])
+        worksheet.write(row, 9, cleanInfos[cleanInfos.index('Transmisión') + 1])
+        worksheet.write(row, 10, cleanInfos[cleanInfos.index('Condición') + 1])
+    except:
+        pass
+    row+=1
 
 driver.quit()
-# # Create a workbook and add a worksheet.
-# workbook = xlsxwriter.Workbook(excel_file_path + "/CorotosOfertas.xlsx")
-# worksheet = workbook.add_worksheet()
-
-# row=1 #rows start at 0 but titles go on first row
-
-# worksheet.write(0,0, "Titulo")
-# worksheet.write(0,1, "Precio")
-# worksheet.write(0,2, "Tipo Vendedor")
-# worksheet.write(0,3, "Nombre Vendedor")
-# worksheet.write(0,4, "Enlace")
-
-# # Title is 14 (last) as getText method
-# # price is 13 (penultimo) as attribute "data-value"
-# # type of publisher store or customer is 10(etc) as getText method
-# # Name of publisher is 8(etc) as attribute "alt"
-# # link to the ad is 1(etc) as attribute "href"
-
-# for elements in fullDivsArray:
-#     elements = elements.findChildren() #it now becomes an array instead of a tag
-#     print("Title is: " + elements[len(elements)-1].getText())
-#     worksheet.write(row, 0, elements[len(elements)-1].getText())
-#     print("Price is: " + str(elements[len(elements)-2]['data-value']))
-#     worksheet.write(row, 1, elements[len(elements)-2]['data-value'])
-#     if elements[len(elements)-5].getText() != "":
-#         print("Type: " + elements[len(elements)-5].getText())
-#         worksheet.write(row, 2, "Tienda")
-#     else:
-#         print("Type: Independiente")
-#         worksheet.write(row, 2, "Independiente")
-#     print("Seller Name: " + str(elements[8]['alt']))
-#     worksheet.write(row, 3, str(elements[8]['alt']))
-#     print("Link: " + str(elements[0]['href']))
-#     worksheet.write(row, 4, "corotos.com.do" + str(elements[0]['href']))
-#     row+=1
-
-# workbook.close()
+workbook.close()
 
 exit()
