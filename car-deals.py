@@ -49,14 +49,16 @@ row=1 #rows start at 0 but titles go on first row
 worksheet.write(0,0, "Fecha")
 worksheet.write(0,1, "Ubicación")
 worksheet.write(0,2, "Categoria")
-worksheet.write(0,3, "Marca")
-worksheet.write(0,4, "Modelo")
-worksheet.write(0,5, "Tipo")
-worksheet.write(0,6, "Año")
-worksheet.write(0,7, "Kilometraje")
-worksheet.write(0,8, "Combustible")
-worksheet.write(0,9, "Transmisión")
-worksheet.write(0,10, "Condición")
+worksheet.write(0,3, "Precio")
+worksheet.write(0,4, "Marca")
+worksheet.write(0,5, "Modelo")
+worksheet.write(0,6, "Tipo")
+worksheet.write(0,7, "Año")
+worksheet.write(0,8, "Kilometraje")
+worksheet.write(0,9, "Combustible")
+worksheet.write(0,10, "Transmisión")
+worksheet.write(0,11, "Condición")
+worksheet.write(0,12, "Enlace")
 
 #driver.get each link item, parse the html for the ad page, create list with infos in
 for link in offer_list:
@@ -65,25 +67,33 @@ for link in offer_list:
     cvehicleSoup = soup(res, "html.parser")
     infos = []
     infos = cvehicleSoup.findAll("p", {"class" : "_15IPb"})
+    price = cvehicleSoup.find("h2", {"class" : "_2Xz9N l-BkY sQocJ"})
+    price = price.findChildren()
+    price = price[0]['data-value']
     cleanInfos = []
     for n in infos:
         cleanInfos.append(n.text)
     try:
-        print("Brand: " + cleanInfos[cleanInfos.index('Marca') + 1] + ". Year: " + cleanInfos[cleanInfos.index('Año') + 1] + ". Condición: " + cleanInfos[cleanInfos.index('Condición') + 1])
-        worksheet.write(row, 0, cleanInfos[0])
+        print("Records encontrados: " + str(row))
+        fecha = cleanInfos[0]
+        fecha = fecha.split(' ')
+        fecha = fecha[1] + '/' + fecha[3] + '/' + fecha[5] 
+        worksheet.write(row, 0, fecha)
         worksheet.write(row, 1, cleanInfos[1])
         worksheet.write(row, 2, cleanInfos[2])
-        worksheet.write(row, 3, cleanInfos[cleanInfos.index('Marca') + 1])
-        worksheet.write(row, 4, cleanInfos[cleanInfos.index('Modelo') + 1])
-        worksheet.write(row, 5, cleanInfos[cleanInfos.index('Tipo') + 1])
-        worksheet.write(row, 6, cleanInfos[cleanInfos.index('Año') + 1])
-        worksheet.write(row, 7, cleanInfos[cleanInfos.index('Kilometraje') + 1])
-        worksheet.write(row, 8, cleanInfos[cleanInfos.index('Combustible') + 1])
-        worksheet.write(row, 9, cleanInfos[cleanInfos.index('Transmisión') + 1])
-        worksheet.write(row, 10, cleanInfos[cleanInfos.index('Condición') + 1])
+        worksheet.write(row, 3, price)
+        worksheet.write(row, 4, cleanInfos[cleanInfos.index('Marca') + 1])
+        worksheet.write(row, 5, cleanInfos[cleanInfos.index('Modelo') + 1])
+        worksheet.write(row, 6, cleanInfos[cleanInfos.index('Tipo') + 1])
+        worksheet.write(row, 7, cleanInfos[cleanInfos.index('Año') + 1])
+        worksheet.write(row, 8, cleanInfos[cleanInfos.index('Kilometraje') + 1])
+        worksheet.write(row, 9, cleanInfos[cleanInfos.index('Combustible') + 1])
+        worksheet.write(row, 10, cleanInfos[cleanInfos.index('Transmisión') + 1])
+        worksheet.write(row, 11, cleanInfos[cleanInfos.index('Condición') + 1])
+        worksheet.write(row, 12, link)
+        row+=1
     except:
         pass
-    row+=1
 
 driver.quit()
 workbook.close()
