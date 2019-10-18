@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup as soup
 from selenium import webdriver
 import xlsxwriter
 import sys, os, inspect
-
+import logging
 
 chromedriver_path = "C:/Users/HP/Anaconda3/pkgs/python-chromedriver-binary-77.0.3865.40.0-py37_0/Lib/site-packages/chromedriver_binary/chromedriver.exe"
 
@@ -87,8 +87,8 @@ for link in offer_list:
         worksheet.write(row, 9, location)
         worksheet.write(row, 10, link)
         row+=1
-    except:
-        pass
+    except Exception as e:
+        logging.error('Exception at %s', 'division', exc_info=e)
 
 driver.quit()
 workbook.close()
