@@ -12,6 +12,8 @@ excel_file_path = os.path.join(os.environ["HOMEPATH"], "Desktop")
 #Create chrome isntance
 driver = webdriver.Chrome(executable_path = chromedriver_path)
 
+#ADD CARROS LINKS
+
 #request url
 driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/carros")
 
@@ -36,6 +38,32 @@ offer_list = []
 for elements in fullDivsArray:
     elements = elements.findChildren()
     offer_list.append("https://www.corotos.com.do" + str(elements[0]['href']))
+
+#ADD JEEPETAS LINKS
+
+#request url
+driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/jeepetas-camionetas")
+
+#Load 1000 cars
+load_more = driver.find_element_by_xpath("//button[@data-name='load_more']")
+#27 times because 36 + 36*27 is equal 1008 which is what we want
+for i in range(1):
+    driver.execute_script("arguments[0].click();", load_more)
+
+#Execute script to retreive dynamically rendered html text into res var
+res = driver.execute_script("return document.documentElement.outerHTML")
+
+#Parse html from rendered view "res"
+cvehicleSoup = soup(res, "html.parser")
+
+#Get every offer's div
+fullDivsArray = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
+
+for elements in fullDivsArray:
+    elements = elements.findChildren()
+    offer_list.append("https://www.corotos.com.do" + str(elements[0]['href']))
+
+#SCRAPE EACH INDIVIDUAL AD AND WRITE RECORD INTO EXCEL
 
 # Create a workbook and add a worksheet.
 workbook = xlsxwriter.Workbook(excel_file_path + "/CorotosOfertas.xlsx")
@@ -89,6 +117,7 @@ for link in offer_list:
         row+=1
     except Exception as e:
         logging.error('Exception at %s', 'division', exc_info=e)
+        print(link)
 
 driver.quit()
 workbook.close()
