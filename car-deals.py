@@ -199,10 +199,18 @@ for link in jeep_offer_list:
 
 driver.quit()
 
-try: 
-    workbook.close()
-    print("Proceso terminado exitosamente")
-except:
-    pass
+saveFailed = True
+
+while saveFailed:
+    try:
+        workbook.close()
+    except:
+        # For Python 3 use input(). For Python 2 raw_input().
+        decision = input("Error al tratar de guardar el archivo.\n Favor cierre el archivo previo o remuevalo del escritorio.\n ¿Intentar de nuevo? [escriba: s | n]: ")
+        if decision != 'n':
+            break
+    else:
+        print("Proceso terminado.")
+        saveFailed = False
 
 exit()
