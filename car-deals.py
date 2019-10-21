@@ -8,6 +8,9 @@ import logging
 DateTo = input("Escriba el dia limite en formato dd: ")
 DateTo = str(int(DateTo)-1)
 
+#preparar comando clear() para mantener limpia la pantalla de la consola
+clear = lambda: os.system('cls') 
+
 chromedriver_path = "C:/Users/HP/Anaconda3/pkgs/python-chromedriver-binary-77.0.3865.40.0-py37_0/Lib/site-packages/chromedriver_binary/chromedriver.exe"
 
 #dynamically get desktop
@@ -51,11 +54,13 @@ while stop == False :
     test_fecha = test_fecha.text
     test_fecha = test_fecha.split(' ')
     test_fecha = test_fecha[1]
+    clear()
     if test_fecha == DateTo: #Check if we reached day user wanted and stop
         stop=True
         print("Total de ofertas carro encontradas: " + str(len(car_offer_list)))
     if stop != True:
         print("Cargando listado del dia " + test_fecha + "...")
+        print("Total de ofertas carro encontradas: " + str(len(car_offer_list)))
 
 #ADD JEEPETAS LINKS UNTIL DAY USER SAID
 
@@ -89,11 +94,13 @@ while stop == False :
     test_fecha = test_fecha.text
     test_fecha = test_fecha.split(' ')
     test_fecha = test_fecha[1]
+    clear()
     if test_fecha == DateTo: #Check if we reached day user wanted and stop
         stop=True
         print("Total de ofertas jeep encontradas: " + str(len(jeep_offer_list)))
     if stop != True:
         print("Cargando listado del dia " + test_fecha + "...")
+        print("Total de ofertas jeep encontradas: " + str(len(jeep_offer_list)))
 
 test_driver.quit()
 
@@ -121,21 +128,21 @@ worksheet.write(0,10, "Enlace")
 
 #Get each individual ad and scrape it
 for link in car_offer_list:
-    driver.get(link)
-    res = driver.execute_script("return document.documentElement.outerHTML")
-    cvehicleSoup = soup(res, "html.parser")
     infos = []
-    infos = cvehicleSoup.findAll("p", {"class" : "_15IPb"})
-    location = infos[1].text
-    price = cvehicleSoup.find("h2", {"class" : "_2Xz9N l-BkY sQocJ"})
-    price = price.findChildren()
-    price = price[0]['data-value']
-    nameOfSeller = cvehicleSoup.find("h3", {"class" : "_2Xz9N _1q9YR h3"})
     cleanInfos = []
-    for n in infos:
-        cleanInfos.append(n.text)
     try:
-        print("Records carros encontrados: " + str(row)  + " de " + str(len(jeep_offer_list)))
+        driver.get(link)
+        res = driver.execute_script("return document.documentElement.outerHTML")
+        cvehicleSoup = soup(res, "html.parser")
+        infos = cvehicleSoup.findAll("p", {"class" : "_15IPb"})
+        location = infos[1].text
+        price = cvehicleSoup.find("h2", {"class" : "_2Xz9N l-BkY sQocJ"})
+        price = price.findChildren()
+        price = price[0]['data-value']
+        nameOfSeller = cvehicleSoup.find("h3", {"class" : "_2Xz9N _1q9YR h3"})
+        for n in infos:
+            cleanInfos.append(n.text)
+        clear()
         fecha = cleanInfos[0]
         fecha = fecha.split(' ')
         fecha = fecha[1] + '/' + fecha[3] + '/' + fecha[5] 
@@ -150,26 +157,27 @@ for link in car_offer_list:
         worksheet.write(row, 8, nameOfSeller.text)
         worksheet.write(row, 9, location)
         worksheet.write(row, 10, link)
+        print("Records escritos: " + str(row)  + " de " + str(len(jeep_offer_list) + len(car_offer_list)))
         row+=1
     except:
-        print("Saltando usuario comercial identificado...")
+        print("Saltando anuncio comercial o no disponible identificado...")
 
 for link in jeep_offer_list:
-    driver.get(link)
-    res = driver.execute_script("return document.documentElement.outerHTML")
-    cvehicleSoup = soup(res, "html.parser")
-    infos = []
-    infos = cvehicleSoup.findAll("p", {"class" : "_15IPb"})
-    location = infos[1].text
-    price = cvehicleSoup.find("h2", {"class" : "_2Xz9N l-BkY sQocJ"})
-    price = price.findChildren()
-    price = price[0]['data-value']
-    nameOfSeller = cvehicleSoup.find("h3", {"class" : "_2Xz9N _1q9YR h3"})
     cleanInfos = []
-    for n in infos:
-        cleanInfos.append(n.text)
+    infos = []
     try:
-        print("Records jeepetas encontrados: " + str(row) + " de " + str(len(jeep_offer_list)))
+        driver.get(link)
+        res = driver.execute_script("return document.documentElement.outerHTML")
+        cvehicleSoup = soup(res, "html.parser")
+        infos = cvehicleSoup.findAll("p", {"class" : "_15IPb"})
+        location = infos[1].text
+        price = cvehicleSoup.find("h2", {"class" : "_2Xz9N l-BkY sQocJ"})
+        price = price.findChildren()
+        price = price[0]['data-value']
+        nameOfSeller = cvehicleSoup.find("h3", {"class" : "_2Xz9N _1q9YR h3"})
+        for n in infos:
+            cleanInfos.append(n.text)
+        clear()
         fecha = cleanInfos[0]
         fecha = fecha.split(' ')
         fecha = fecha[1] + '/' + fecha[3] + '/' + fecha[5] 
@@ -184,9 +192,10 @@ for link in jeep_offer_list:
         worksheet.write(row, 8, nameOfSeller.text)
         worksheet.write(row, 9, location)
         worksheet.write(row, 10, link)
+        print("Records escritos: " + str(row)  + " de " + str(len(jeep_offer_list) + len(car_offer_list)))
         row+=1
     except:
-        print("Saltando usuario comercial identificado...")
+        print("Saltando anuncio comercial o no disponible identificado...")
 
 driver.quit()
 
