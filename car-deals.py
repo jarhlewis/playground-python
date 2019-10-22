@@ -32,7 +32,7 @@ driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/carros"
 load_more = driver.find_element_by_xpath("//button[@data-name='load_more']")
 
 stop = False #keep track of the publishing date of the last item when clicking 'load more'
-startAddingFromHere = 0 #A Controller to know what offer_list item was the last added to the excel so that records are not repeated
+
 while stop == False :
     driver.execute_script("arguments[0].click();", load_more)
     #Execute script to retreive dynamically rendered html text into res var
@@ -72,7 +72,7 @@ driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/jeepeta
 load_more = driver.find_element_by_xpath("//button[@data-name='load_more']")
 
 stop = False #keep track of the publishing date of the last item when clicking 'load more'
-startAddingFromHere = 0 #A Controller to know what offer_list item was the last added to the excel so that records are not repeated
+
 while stop == False :
     driver.execute_script("arguments[0].click();", load_more)
     #Execute script to retreive dynamically rendered html text into res var
@@ -157,10 +157,10 @@ for link in car_offer_list:
         worksheet.write(row, 8, nameOfSeller.text)
         worksheet.write(row, 9, location)
         worksheet.write(row, 10, link)
-        print("Records escritos: " + str(row)  + " de " + str(len(jeep_offer_list) + len(car_offer_list)))
+        print("[1/2] Extrayendo datos a formato excel (carros): " + str(((car_offer_list.index(link)+1) / len(car_offer_list)) * 100) + "%")
         row+=1
     except:
-        print("Saltando anuncio comercial o no disponible identificado...")
+        pass
 
 for link in jeep_offer_list:
     cleanInfos = []
@@ -192,10 +192,10 @@ for link in jeep_offer_list:
         worksheet.write(row, 8, nameOfSeller.text)
         worksheet.write(row, 9, location)
         worksheet.write(row, 10, link)
-        print("Records escritos: " + str(row)  + " de " + str(len(jeep_offer_list) + len(car_offer_list)))
+        print("[2/2] Extrayendo datos a formato excel (jeepetas): " + str(((jeep_offer_list.index(link)+1) / len(jeep_offer_list)) * 100) + "%")
         row+=1
     except:
-        print("Saltando anuncio comercial o no disponible identificado...")
+        pass
 
 driver.quit()
 
