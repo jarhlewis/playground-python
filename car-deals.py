@@ -3,6 +3,7 @@ from selenium import webdriver
 import xlsxwriter
 import sys, os, inspect
 import logging
+import math
 
 #Tomar dia hasta el que se encontrarán los records
 DateTo = input("Escriba el dia limite en formato dd: ")
@@ -142,7 +143,6 @@ for link in car_offer_list:
         nameOfSeller = cvehicleSoup.find("h3", {"class" : "_2Xz9N _1q9YR h3"})
         for n in infos:
             cleanInfos.append(n.text)
-        clear()
         fecha = cleanInfos[0]
         fecha = fecha.split(' ')
         fecha = fecha[1] + '/' + fecha[3] + '/' + fecha[5] 
@@ -157,7 +157,8 @@ for link in car_offer_list:
         worksheet.write(row, 8, nameOfSeller.text)
         worksheet.write(row, 9, location)
         worksheet.write(row, 10, link)
-        print("[1/2] Extrayendo datos a formato excel (carros): " + str(((car_offer_list.index(link)+1) / len(car_offer_list)) * 100) + "%")
+        clear()
+        print("[1/2] Extrayendo datos a formato excel (carros): " + str(math.ceil(((car_offer_list.index(link)+1) / len(car_offer_list)) * 100)) + "%")
         row+=1
     except:
         pass
@@ -177,7 +178,6 @@ for link in jeep_offer_list:
         nameOfSeller = cvehicleSoup.find("h3", {"class" : "_2Xz9N _1q9YR h3"})
         for n in infos:
             cleanInfos.append(n.text)
-        clear()
         fecha = cleanInfos[0]
         fecha = fecha.split(' ')
         fecha = fecha[1] + '/' + fecha[3] + '/' + fecha[5] 
@@ -192,7 +192,8 @@ for link in jeep_offer_list:
         worksheet.write(row, 8, nameOfSeller.text)
         worksheet.write(row, 9, location)
         worksheet.write(row, 10, link)
-        print("[2/2] Extrayendo datos a formato excel (jeepetas): " + str(((jeep_offer_list.index(link)+1) / len(jeep_offer_list)) * 100) + "%")
+        clear()
+        print("[2/2] Extrayendo datos a formato excel (jeepetas): " + str(math.ceil(((jeep_offer_list.index(link)+1) / len(jeep_offer_list)) * 100)) + "%")
         row+=1
     except:
         pass
