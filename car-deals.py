@@ -30,7 +30,7 @@ print("Cargando carros...")
 #request url
 driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/carros")
 
-load_more = driver.find_element_by_xpath("//button[@data-name='load_more']")
+load_more = driver.find_element_by_xpath("//button[@id='load-more-btn']")
 
 stop = False #keep track of the publishing date of the last item when clicking 'load more'
 
@@ -41,12 +41,11 @@ while stop == False :
     #Parse html from rendered view "res"
     cvehicleSoup = soup(res, "html.parser")
     #Get every offer's div
-    fullDivsArray = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
+    fullDivsArray = cvehicleSoup.findAll("div", {"class" : "card"})
     #Locate the link to each offer page and store it in a list
     car_offer_list = []
     for elements in fullDivsArray:
-        elements = elements.findChildren()
-        car_offer_list.append("https://www.corotos.com.do" + str(elements[0]['href']))
+        car_offer_list.append("https://www.corotos.com.do" + str(elements.a['href']))
     #Check Date for last item
     test_driver.get(car_offer_list[-1])
     test_res = test_driver.execute_script("return document.documentElement.outerHTML")
@@ -70,7 +69,7 @@ print("Cargando jeepetas...")
 #request url
 driver.get("https://www.corotos.com.do/l/santo-domingo/sc/veh%C3%ADculos/jeepetas-camionetas")
 
-load_more = driver.find_element_by_xpath("//button[@data-name='load_more']")
+load_more = driver.find_element_by_xpath("//button[@id='load-more-btn']")
 
 stop = False #keep track of the publishing date of the last item when clicking 'load more'
 
@@ -81,12 +80,11 @@ while stop == False :
     #Parse html from rendered view "res"
     cvehicleSoup = soup(res, "html.parser")
     #Get every offer's div
-    fullDivsArray = cvehicleSoup.findAll("div", {"class" : "DbXTC _2pm69 _1JgR4 QF_XG"})
+    fullDivsArray = cvehicleSoup.findAll("div", {"class" : "card"})
     #Locate the link to each offer page and store it in a list
     jeep_offer_list = []
     for elements in fullDivsArray:
-        elements = elements.findChildren()
-        jeep_offer_list.append("https://www.corotos.com.do" + str(elements[0]['href']))
+        jeep_offer_list.append("https://www.corotos.com.do" + str(elements.a['href']))
     #Check Date for last item
     test_driver.get(jeep_offer_list[-1])
     test_res = test_driver.execute_script("return document.documentElement.outerHTML")
