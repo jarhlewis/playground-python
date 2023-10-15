@@ -5,6 +5,10 @@ ARG_HEIGHT = "H"
 ARG_WIDTH = "W"
 
 def surfaceArea(length = 0, height = 0, width = 0):
+    print(f'Using length: {length}')
+    print(f'Using height: {height}')
+    print(f'Using width: {width}')
+    
     frontSurface = length * height
     topSurface = length * width
     sideSurface = width * height
@@ -26,9 +30,5 @@ args = parseArguments()
 length = float(args.get(ARG_LENGTH))
 height = float(args.get(ARG_HEIGHT))
 width = float(args.get(ARG_WIDTH))
-
-print(f'Using length: {length}')
-print(f'Using height: {height}')
-print(f'Using width: {width}')
 
 surfaceArea(length, height, width)
